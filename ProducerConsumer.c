@@ -5,7 +5,10 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <time.h>
-#include "buffer.h" // local file that defines 2 variables
+
+/* buffer.h */
+typedef int buffer_item;
+#define BUFFER_SIZE 5
 
 // Declare Global variables
 buffer_item buffer[BUFFER_SIZE];
@@ -25,7 +28,7 @@ int main(){
         int i;
 
         //get user input to set declared variables
-        printf("\nEnter Sleep Time: ");
+        printf("\nHow long before program Stops (Secs): ");
         scanf("%d", &sleep_time);
         printf("\nEnter Number of Producers: ");
         scanf("%d", &numproducers);
