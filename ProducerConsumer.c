@@ -7,13 +7,13 @@
 #include <time.h>
 #include "buffer.h" // local file that defines 2 variables
 
-// Global variables
+// Declare Global variables
 buffer_item buffer[BUFFER_SIZE];
 pthread_mutex_t mutex;
 sem_t full, empty;
 int count, in, out;
 
-// Function prototypes
+// Declare Function prototypes
 int insert_item(buffer_item item);
 int remove_item(buffer_item *item);
 void *consumer(void *param);
@@ -42,10 +42,12 @@ int main(){
         // Create threads for producer and consumer
         pthread_t producers[numproducers];
         pthread_t consumers[numconsumers];
-        for(i = 0; i < numproducers; i++)
-                pthread_create(&producers[i], NULL, producer, NULL);
-        for(i = 0; i < numconsumers; i++)
-                pthread_create(&consumers[i], NULL, consumer, NULL);
+        for(i = 0; i < numproducers; i++){
+          pthread_create(&producers[i], NULL, producer, NULL);
+        }
+        for(i = 0; i < numconsumers; i++){
+          pthread_create(&consumers[i], NULL, consumer, NULL);
+        }
 
 
         // Sleep before terminating
@@ -61,10 +63,11 @@ void *producer(void *param){
                 sleep(rand() % 5 + 1); // Sleep randomly between 1 and 5 seconds
 
                 item = rand();
-                if(insert_item(item))
-                        printf("Error occured\n");
-                else
-                        printf("Producer produced %d\n", item);
+                if(insert_item(item)){
+                  printf("Error occured\n");
+                }else{
+                  printf("Producer produced %d\n", item);
+                }
         }
 }
 // Insert item into buffer.
@@ -84,9 +87,7 @@ int insert_item(buffer_item item){
                 in = (in + 1) % BUFFER_SIZE;
                 count++;
                 success = 0;
-        }
-        else
-        {
+        }else{
                 success = -1;
         }
 
@@ -107,11 +108,12 @@ void *consumer(void *param){
         while(1) {
                 sleep(rand() % 5 + 1); // Sleep randomly between 1 and 5 seconds
 
-                if(remove_item(&item))
-                        printf("Error occured\n");
-                else
-                        printf("Consumer consumed %d\n", item);
-        }
+                if(remove_item(&item)){
+                  printf("Error occured\n");
+                }else{
+                  printf("Consumer consumed %d\n", item);
+                }
+        }//end while loop
 }
 // Remove an object from the buffer, placing it in item.
 // Returns 0 if successful, -1 indicating error
@@ -131,11 +133,8 @@ int remove_item(buffer_item *item){
                 out = (out + 1) % BUFFER_SIZE;
                 count--;
                 success = 0;
-        }
-        else
-        {
+        }else{
                 success = -1;
-
         }
 
         //unblock mutex thread to be available for next item
